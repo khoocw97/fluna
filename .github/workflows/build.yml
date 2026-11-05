@@ -75,22 +75,22 @@ jobs:
             ${DEFAULT_TAG}
 
       # This is optional, this provides smaller delta updates
-      - name: Rechunk with rpm-ostree
-        id: rechunk
-        run: |
-          just ostree-rechunk \
-            ${IMAGE_NAME} \
-            ${DEFAULT_TAG}
+      #- name: Rechunk with rpm-ostree
+      #  id: rechunk
+      #  run: |
+      #    just ostree-rechunk \
+      #      ${IMAGE_NAME} \
+      #      ${DEFAULT_TAG}
 
       # If you are feeling adventurous, use the new distro agnostic rechunker
       # https://github.com/coreos/chunkah
       # You can delete the Rechunk with rpm-ostree portion then if you use this
-      #- name: Rechunk with Chunkah
-      #  id: rechunk
-      #  run: |
-      #    just rechunk \
-      #      ${IMAGE_NAME} \
-      #      ${DEFAULT_TAG}
+      - name: Rechunk with Chunkah
+        id: rechunk
+        run: |
+          just rechunk \
+            ${IMAGE_NAME} \
+            ${DEFAULT_TAG}
 
       - name: Generate Build Tags
         id: gen-build-tags
@@ -161,4 +161,3 @@ jobs:
           # https://github.com/coreos/rpm-ostree/issues/5509
           # use old bundle format, so we can use newer cosign 3.X.X instead of 2.X.X
           cosign sign -y --new-bundle-format=false --use-signing-config=false --key env://COSIGN_PRIVATE_KEY ${IMAGE_REGISTRY}/${IMAGE_NAME}@${DIGEST}
-

@@ -1,0 +1,11 @@
+# 启动项 —— 对应 niri cfg/autostart.kdl 的 spawn-at-startup
+#
+# autostart 是随会话启动一次的命令列表；改动需要重启会话（热重载无效）。
+# 注意：就这一处 [general].autostart，其他模块不要再设（普通键是“后写覆盖”）。
+
+[general]
+autostart = [
+  "noctalia",
+  "fcitx5 -d",
+  #"sunshine",
+]

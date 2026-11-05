@@ -1,0 +1,4 @@
+# flatpak override global
+[Environment]
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx

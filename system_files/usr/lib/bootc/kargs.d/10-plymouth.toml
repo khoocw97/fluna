@@ -1,0 +1,2 @@
+# Graphical boot: hide the text boot log and let plymouth own the screen.
+kargs = ["rhgb", "quiet"]

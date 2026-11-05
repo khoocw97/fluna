@@ -1,27 +1,21 @@
-#!/bin/bash
-
-set -ouex pipefail
-
-# Copy the contents of system_files/ of the git repo to /
-cp -avf "/ctx/system_files"/. /
-
-### Install packages
-
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
-
-# this installs a package from fedora repos
-dnf5 install -y tmux
-
-# Use a COPR Example:
+#!/usr/bin/env bash
 #
-# dnf5 -y copr enable ublue-os/staging
-# dnf5 -y install package
-# Disable COPRs so they don't end up enabled on the final image:
-# dnf5 -y copr disable ublue-os/staging
+# Stage orchestration. Keep this file boring: one line per stage, in order.
+#
+set -xeuo pipefail
 
-#### Example for enabling a System Unit File
+/ctx/00-ocg-kernel.sh
+/ctx/01-base.sh
+/ctx/02-remove-pkgs.sh
+/ctx/03-install-pkgs.sh
+/ctx/04-gaming.sh
+/ctx/05-script.sh
+/ctx/06-finalize.sh
 
-systemctl enable podman.socket
+# After the package work: the initramfs bootc actually boots (00 shimmed
+# dracut), then scratch/DNF cleanup.
+/ctx/build-initramfs.sh
+/ctx/cleanup.sh
+
+# Normalize mtimes last, so the layer is reproducible.
+/ctx/reset-mtimes.sh

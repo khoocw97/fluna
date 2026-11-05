@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=simple-sddm
+Description=ly TUI clone for SDDM
+Author=weng
+Version=0.1.0
+License=MIT
+Theme-Id=simple-sddm
+MainQmlFile=Main.qml
+ConfigFile=theme.conf
+Screenshot=preview.png
+Type=sddm-theme

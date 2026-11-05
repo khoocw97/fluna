@@ -1,0 +1,6 @@
+# Bazaar, the Flatpak app store. Kept separate from the user-facing app list.
+# flatpak-preinstall.service installs it system-wide (--system) on boot.
+# Docs: https://docs.flatpak.org/en/latest/flatpak-command-reference.html#flatpak-preinstall
+
+[Flatpak Preinstall io.github.kolunmi.Bazaar]
+Branch=stable

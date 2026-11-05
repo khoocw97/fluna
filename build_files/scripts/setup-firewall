@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+for zone in public FedoraWorkstation home; do
+  # open mdns
+  firewall-offline-cmd --zone="$zone" --add-service=mdns
+  # kdeconnect  (1714-1764/tcp+udp)
+  firewall-offline-cmd --zone="$zone" --add-service=kdeconnect
+  # localsend  (53317/tcp+udp)
+  firewall-offline-cmd --zone="$zone" --add-port=53317/tcp
+  firewall-offline-cmd --zone="$zone" --add-port=53317/udp
+  # sunshine  (47984/47989/47990/48010 tcp, 47998-48000/48002/48010 udp)
+  firewall-offline-cmd --zone="$zone" --add-port=47984/tcp --add-port=47989/tcp \
+    --add-port=47990/tcp --add-port=48010/tcp
+  firewall-offline-cmd --zone="$zone" --add-port=47998-48000/udp \
+    --add-port=48002/udp --add-port=48010/udp
+done

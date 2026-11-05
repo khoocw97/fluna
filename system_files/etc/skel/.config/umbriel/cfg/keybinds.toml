@@ -1,0 +1,124 @@
+[keybinds]
+# Personal
+"Mod+E" = "spawn nemo"
+"Mod+Return" = "spawn kitty"
+"Mod+B" = "spawn firefox || flatpak run org.mozilla.firefox"
+"Mod+G" = "spawn google-chrome-stable || flatpak run com.google.Chrome"
+"Mod+O" = "spawn obs || flatpak run com.obsproject.Studio"
+"Mod+N" = "spawn zed"
+
+# noctalia setting
+"Mod+Space" = "spawn noctalia msg panel-toggle launcher"
+"Mod+V" = "spawn noctalia msg panel-toggle clipboard"
+"Mod+W" = "spawn noctalia msg panel-toggle wallpaper"
+# "Mod+X" = "spawn noctalia msg bar-toggle"
+"Mod+X" = "spawn noctalia msg panel-toggle session"
+"Mod+S" = "spawn noctalia msg settings-toggle"
+"Print" = "spawn noctalia msg screenshot-region"
+"Mod+Print" = "spawn noctalia msg screenshot-fullscreen"
+"Mod+Alt+Print" = "spawn noctalia msg screenshot-fullscreen pick"
+
+# system setting
+"Mod+Shift+Q" = "session-quit"
+"Mod+Shift+R" = "config-reload"
+"Mod+Shift+Slash" = "cheatsheet-toggle"
+
+# brightness setting
+"XF86MonBrightnessDown" = { action = "spawn noctalia msg brightness-down 10", allow_when_locked = true }
+"XF86MonBrightnessUp" = { action = "spawn noctalia msg brightness-up 10", allow_when_locked = true }
+"XF86KbdBrightnessUp"   = "spawn brightnessctl -d smc::kbd_backlight set +10%"
+"XF86KbdBrightnessDown" = "spawn brightnessctl -d smc::kbd_backlight set 10%-"
+"Mod+Shift+P" = "dpms-off" # power off screen, use dpms-off:DP-2 to specify
+
+# volume setting
+"XF86AudioRaiseVolume" = "spawn wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+"XF86AudioLowerVolume" = "spawn wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+
+# media setting
+"XF86AudioMute" = "spawn wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+"XF86AudioPlay" = "spawn playerctl play-pause"
+"XF86AudioNext" = "spawn playerctl next"
+"XF86AudioPrev" = "spawn playerctl previous"
+
+# Window setting
+"Mod+Tab" = {action = "overview-toggle", repeat = false}
+"Mod+Q" = {action = "window-close", repeat = false}
+"Mod+C" = "column-center"
+"Mod+F" = "window-toggle-maximize"
+# "Mod+Shift+F" = "window-toggle-maximize-to-edges"
+"Mod+Shift+F" = "window-toggle-fullscreen"
+"Mod+R" = "window-cycle-primary-extent"
+"Mod+T" = "window-toggle-floating"
+"Mod+Shift+T" = "window-toggle-pinned"
+
+"Mod+Comma" = "window-consume-or-expel-left"
+"Mod+Period" = "window-consume-or-expel-right"
+
+"Mod+Home" = "column-focus-first"
+"Mod+End"  = "column-focus-last"
+"Mod+Up" = "window-focus-or-workspace-up"
+"Mod+Down" = "window-focus-or-workspace-down"
+"Mod+Left" = "window-focus-or-output-left"
+"Mod+Right" = "window-focus-or-output-right"
+
+"Mod+K" = "window-focus-or-workspace-up"
+"Mod+J" = "window-focus-or-workspace-down"
+"Mod+H" = "window-focus-or-output-left"
+"Mod+L" = "window-focus-or-output-right"
+
+"Mod+Ctrl+Home" = "column-move-to-first"
+"Mod+Ctrl+End"  = "column-move-to-last"
+"Mod+Ctrl+Up" = "window-move-or-workspace-up"
+"Mod+Ctrl+Down" = "window-move-or-workspace-down"
+"Mod+Ctrl+Left" = "window-move-or-output-left"
+"Mod+Ctrl+Right" = "window-move-or-output-right"
+
+"Mod+Ctrl+K" = "window-move-or-workspace-up"
+"Mod+Ctrl+J" = "window-move-or-workspace-down"
+"Mod+Ctrl+H" = "window-move-or-output-left"
+"Mod+Ctrl+L" = "window-move-or-output-right"
+
+# Windows Setting - mouse
+"Mod+WheelUp" = { action = "window-focus-left", cooldown_ms = 150 }
+"Mod+WheelDown" = { action = "window-focus-right", cooldown_ms = 150 }
+"Mod+Ctrl+WheelUp" = "column-move-left"
+"Mod+Ctrl+WheelDown" = "column-move-right"
+"Mod+MouseMiddle" = "overview-toggle"
+
+# Focus Monitor
+"Mod+Shift+Tab"   = "output-focus-next"
+"Mod+Shift+Left"  = "output-focus-left"
+"Mod+Shift+Down"  = "output-focus-down"
+"Mod+Shift+Up"    = "output-focus-up"
+"Mod+Shift+Right" = "output-focus-right"
+
+"Mod+Shift+H"     = "output-focus-left"
+"Mod+Shift+J"     = "output-focus-down"
+"Mod+Shift+K"     = "output-focus-up"
+"Mod+Shift+L"     = "output-focus-right"
+
+# Move Column to Output
+"Mod+Shift+Ctrl+Left"  = "column-move-to-output-left"
+"Mod+Shift+Ctrl+Down"  = "column-move-to-output-down"
+"Mod+Shift+Ctrl+Up"    = "column-move-to-output-up"
+"Mod+Shift+Ctrl+Right" = "column-move-to-output-right"
+
+# Workspace switching
+"Mod+1" = "workspace-switch 1"
+"Mod+2" = "workspace-switch 2"
+"Mod+3" = "workspace-switch 3"
+"Mod+4" = "workspace-switch 4"
+"Mod+5" = "workspace-switch 5"
+"Mod+6" = "workspace-switch 6"
+"Mod+7" = "workspace-switch 7"
+"Mod+8" = "workspace-switch 8"
+"Mod+9" = "workspace-switch 9"
+"Mod+Ctrl+1" = "window-move-to-workspace 1" # Move window to workspace
+"Mod+Ctrl+2" = "window-move-to-workspace 2"
+"Mod+Ctrl+3" = "window-move-to-workspace 3"
+"Mod+Ctrl+4" = "window-move-to-workspace 4"
+"Mod+Ctrl+5" = "window-move-to-workspace 5"
+"Mod+Ctrl+6" = "window-move-to-workspace 6"
+"Mod+Ctrl+7" = "window-move-to-workspace 7"
+"Mod+Ctrl+8" = "window-move-to-workspace 8"
+"Mod+Ctrl+9" = "window-move-to-workspace 9"

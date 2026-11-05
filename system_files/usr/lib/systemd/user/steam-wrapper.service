@@ -1,0 +1,14 @@
+[Unit]
+Description=Steam (steam-wrapper)
+After=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/steam-wrapper -silent
+Restart=on-failure
+RestartSec=5
+Environment=XDG_SESSION_TYPE=wayland
+
+[Install]
+WantedBy=graphical-session.target

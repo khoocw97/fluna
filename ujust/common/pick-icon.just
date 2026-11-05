@@ -1,0 +1,20 @@
+# 交互选择并切换 GTK 图标主题
+pick-icon:
+    #!/usr/bin/bash
+    source /usr/lib/ujust/ujust.sh
+    THEME=$(gsettings get org.gnome.desktop.interface icon-theme | tr -d "'")
+
+    mapfile -t THEMES < <(find "$HOME/.local/share/icons" "/usr/share/icons" \
+        -maxdepth 2 -name index.theme -printf '%h\n' 2>/dev/null \
+        | while read -r d; do
+            grep -qE '^Directories[[:space:]]*=' "$d/index.theme" && basename "$d"
+        done | sort -u)
+    echo "${bold}当前主题: ${normal}$THEME"
+    NEW=$(ugum choose "${THEMES[@]}")
+    [ -z "$NEW" ] && echo "已取消" && exit 1
+    [ "$NEW" = "$THEME" ] && echo "已是当前主题" && exit 0
+    gsettings set org.gnome.desktop.interface icon-theme "$NEW"
+    echo "已切换: $THEME -> $NEW"
+    if [ -d "$HOME/.local/share/icons/$NEW" ]; then
+        gtk-update-icon-cache -f -t "$HOME/.local/share/icons/$NEW" || true
+    fi

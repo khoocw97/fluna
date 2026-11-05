@@ -1,0 +1,5 @@
+[[layer_rule]]
+match.namespace = "^noctalia-bar-"
+blur = true
+blur_ignore_alpha = 0.5
+blur_popups = true

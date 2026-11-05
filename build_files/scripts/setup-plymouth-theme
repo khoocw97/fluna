@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -oeux pipefail
+
+dnf install -y plymouth-plugin-script plymouth-scripts
+plymouth-set-default-theme spinner_alt

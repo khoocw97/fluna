@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+TMP_DIR=$(mktemp -d)
+git clone https://github.com/rime/plum.git "$TMP_DIR/plum"
+cd "$TMP_DIR/plum"
+
+rime_dir="$TMP_DIR/output" bash rime-install iDvel/rime-ice
+rime_dir="$TMP_DIR/output" bash rime-install iDvel/rime-ice:others/recipes/grammar:schema=rime_ice
+rime_dir="$TMP_DIR/output" bash rime-install iDvel/rime-ice:others/recipes/reverse_tone:schema=rime_ice
+
+mkdir -p /usr/share/rime-ice
+cp -r "$TMP_DIR/output"/* /usr/share/rime-ice/
+rm -rf "$TMP_DIR"

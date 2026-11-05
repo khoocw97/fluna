@@ -1,0 +1,70 @@
+# Blur all windows
+[[window_rule]]
+blur = false
+blur_optimized = true
+
+# [[window_rule]]
+# match.is_alone = true
+# default_scrolling_extent = 1.0
+# [[window_rule]]
+# match.is_alone = false
+# default_scrolling_extent = 0.5
+
+# Noctalia settings
+[[window_rule]]
+match.app_id = "^dev.noctalia.Noctalia$"
+default_floating = true
+default_floating_size_px = { width = 1920, height = 1080 }
+blur_popups = false
+
+[[window_rule]]
+match.app_id = "^dev.noctalia.UmbrielSharePicker$"
+default_floating = true
+default_floating_size_px = { width = 800, height = 600 }
+
+# Float utility windows
+[[window_rule]]
+match.app_id = "^(Emulator|zenity|xdg-desktop-portal|qalculate-gtk|org\\.pulseaudio\\.pavucontrol)$"
+default_floating = true
+
+# Float common dialogs by title
+[[window_rule]]
+match.title = "^(Open File|Select|Choose a wallpaper|Open Folder|Save As|Library|Choose Where to Download|File Operation Progress|Rename|Copy Files|Move Files|Search Files|.*Properties)"
+default_floating = true
+
+[[window_rule]]
+match.app_id = "^steam$"
+default_workspace = 2
+default_maximize = true
+default_focused = true
+
+# Steam notification toasts
+[[window_rule]]
+match.app_id = "^steam$"
+match.title = "^notificationtoasts_.+_desktop"
+default_position = { x = 10, y = 10, anchor = "bottom_right" }
+default_focused = false
+default_pinned = true
+
+# [[window_rule]]
+# match.app_id = "^steam_app_.*$"
+# confine_pointer = true
+
+[[window_rule]]
+match.title = "^Picture-in-Picture$"
+default_floating = true
+
+# GNOME settings apps - tiled, 0.5 width
+[[window_rule]]
+match.app_id = "^(gnome-control-center|pavucontrol|nm-connection-editor)$"
+default_scrolling_extent = 0.5
+default_floating = false
+
+# GNOME calculators and small utilities - floating
+[[window_rule]]
+match.app_id = "^(org\\.gnome\\.Calculator|gnome-calculator|galculator|blueman-manager|xdg-desktop-portal)$"
+default_floating = true
+
+# [[window_rule]]
+# match.app_id = "^virt-manager$"
+# allow_shortcuts_inhibit = false

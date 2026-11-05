@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SHA=23e596a01932533f47f967ec5717733076cff635
+URL="https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/$SHA/gamecontrollerdb.txt"
+
+mkdir -p /usr/share/SDL2
+curl -fsSLo /usr/share/SDL2/gamecontrollerdb.txt "$URL"
+
+echo "SDL GameControllerDB ($SHA) installed to /usr/share/SDL2/gamecontrollerdb.txt"

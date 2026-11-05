@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+# Nvidia crash fix
+export __GL_CONSTANT_FRAME_RATE_HINT=3
+
+# Steam IME: XIM support requires a zh locale (#781); SDL_IM_MODULE for in-game chat
+export LANG=zh_CN.UTF-8
+export XMODIFIERS=@im=fcitx
+export SDL_IM_MODULE=fcitx
+
+if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+  # Extest: XTEST replacement for Steam Input on XWayland (https://github.com/Supreeeme/extest)
+  # Steam Client Beta runs the SteamRT3 64-bit client, stable is still 32-bit
+  if [[ -f "$HOME/.local/share/Steam/package/beta" &&
+        -x "$HOME/.local/share/Steam/steamrt64/steam" ]]; then
+    export LD_PRELOAD=/usr/lib/extest/libextest64.so
+  else
+    export LD_PRELOAD=/usr/lib/extest/libextest.so
+  fi
+fi
+exec /usr/bin/steam "$@"

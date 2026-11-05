@@ -1,0 +1,16 @@
+[include]
+files = [
+  "/usr/share/umbriel/config.toml",
+  "./cfg/autostart.toml",
+  "./cfg/keybinds.toml",
+  "./cfg/input.toml",
+  "./cfg/misc.toml",
+  "./cfg/animation.toml",
+  "./cfg/layers.toml",
+  "./cfg/rules.toml",
+]
+
+[include.optional]
+files = [
+  "./cfg/output.toml", # 显示器布局
+]

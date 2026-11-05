@@ -1,0 +1,33 @@
+[animation.springs]
+view      = { damping = 1.0, stiffness = 900 }  # horizontal-view-movement
+move      = { damping = 1.0, stiffness = 800 }  # window-movement
+resize    = { damping = 1.0, stiffness = 1000 } # window-resize
+workspace = { damping = 1.0, stiffness = 1000 } # workspace-switch
+notif     = { damping = 0.6, stiffness = 1200 } # config-notification-open-close（0.6=轻微过冲）
+
+[animation.windows_in] # window-open
+duration_ms = 200
+curve = "0.25,0.46,0.45,0.94" # ease-out-quad
+style = "fade"                # niri 无 popin/zoom，纯淡入贴近原感觉
+
+[animation.windows_out] # window-close
+duration_ms = 200
+curve = "0.215,0.61,0.355,1" # ease-out-cubic
+style = "fade"
+
+[animation.windows_move] # horizontal-view-movement（niri 有两个移动事件，umbriel 共用此表）
+curve = "view"
+
+[animation.windows_resize] # window-resize
+curve = "resize"
+
+[animation.workspaces] # workspace-switch
+curve = "workspace"
+
+[animation.overview] # overview-open-close
+curve = "view"
+workspace_curve = "view" # filmstrip 滚动同 900
+
+[animation.layers] # config-notification-open-close；noctalia 通知/顶栏弹层的开关动画
+enabled = true
+curve = "notif"
