@@ -32,7 +32,10 @@ dnf5 install -y --allowerasing --from-repo=terra-extras uresourced-dmemcg
 dnf5 install -y dmemcg-booster
 
 # -- Patched gamescope/mangohud --
-dnf5 install -y --allowerasing --from-repo=terra-extras \
+# terra-mangohud Recommends mangohud(x86-32), which pulls Fedora's mangohud;
+# the two packages ship the same files but do not Obsolete each other, so the
+# transaction dies on file conflicts. Keep Fedora's mangohud out.
+dnf5 install -y --allowerasing --exclude=mangohud --from-repo=terra-extras \
     terra-gamescope terra-gamescope-libs terra-gamescope-libs.i686 \
     terra-mangohud terra-mangohud.i686
 
