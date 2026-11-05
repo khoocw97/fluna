@@ -24,10 +24,14 @@ mapfile -t OLD_KERNELS < <(rpm -qa | grep -E '^kernel(-core|-modules|-modules-co
 if [[ "${#OLD_KERNELS[@]}" -gt 0 ]]; then
     rpm --erase --allmatches --nodeps "${OLD_KERNELS[@]}"
 fi
-rm -rf /usr/lib/modules/*
+rm -rf /usr/lib/modules
 
 # -- Install the OGC kernel --
-dnf5 -y install /tmp/kernel-rpms/*.rpm
+dnf5 -y install \
+    /tmp/kernel-rpms/kernel-[0-9]*.rpm \
+    /tmp/kernel-rpms/kernel-core-*.rpm \
+    /tmp/kernel-rpms/kernel-modules-*.rpm \
+    /tmp/kernel-rpms/kernel-devel-*.rpm
 
 # -- Pin it --
 # Any later transaction pulling a Fedora kernel would replace what the live

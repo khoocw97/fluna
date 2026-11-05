@@ -16,4 +16,3 @@ trap 'echo "::endgroup::"' EXIT
 /ctx/scripts/setup-firewall
 /ctx/scripts/install-sdl-gamecontroller
 /ctx/scripts/setup-plymouth-theme
-/ctx/scripts/install-sdl-gamecontroller
