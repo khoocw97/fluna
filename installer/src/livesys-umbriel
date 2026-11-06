@@ -1,0 +1,25 @@
+#!/bin/bash
+# live-umbriel: session setup for livesys, mirroring upstream livesys-kde.
+# livesys-main sources /usr/libexec/livesys/sessions.d/livesys-$livesys_session
+# after creating the liveuser, so this only wires autologin and the installer.
+# The umbriel package ships /usr/share/wayland-sessions/umbriel.desktop
+# (Exec=/usr/bin/start-umbriel); livesys-scripts just has no session script.
+
+mkdir -p /etc/sddm.conf.d
+cat > /etc/sddm.conf.d/10-live-autologin.conf <<'EOF'
+[Autologin]
+User=liveuser
+Session=umbriel.desktop
+EOF
+
+# Installer: show it in menus and autostart it with the session
+sed -i 's/NoDisplay=true/NoDisplay=false/' /usr/share/applications/liveinst.desktop 2>/dev/null || :
+autostart=/home/liveuser/.config/umbriel/cfg/autostart.toml
+mkdir -p "$(dirname "${autostart}")"
+if [ -f "${autostart}" ]; then
+    grep -q '"liveinst"' "${autostart}" ||
+        sed -i '/"noctalia",/a\  "liveinst",' "${autostart}"
+else
+    printf '[general]\nautostart = [\n  "noctalia",\n  "liveinst",\n]\n' > "${autostart}"
+fi
+chown -R liveuser:liveuser /home/liveuser/.config

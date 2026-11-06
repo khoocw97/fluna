@@ -1,0 +1,13 @@
+# titanoboa ISO config. build_iso.sh reads .label (ISO volume label, must match
+# root=live:CDLABEL= below) and .grub2.*.
+label: "fluna-Live"
+grub2:
+  timeout: 10
+  default: 0
+  entries:
+    - name: "fluna Live (installer starts automatically)"
+      linux: "/images/pxeboot/vmlinuz quiet rhgb root=live:CDLABEL=fluna-Live enforcing=0 rd.live.image"
+      initrd: "/images/pxeboot/initrd.img"
+    - name: "fluna Live (basic graphics)"
+      linux: "/images/pxeboot/vmlinuz quiet rhgb root=live:CDLABEL=fluna-Live enforcing=0 rd.live.image nomodeset"
+      initrd: "/images/pxeboot/initrd.img"
