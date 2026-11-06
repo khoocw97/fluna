@@ -21,6 +21,15 @@ dnf -y versionlock delete "${kernel_pkgs[@]}" || :
 dnf --setopt=protect_running_kernel=False -y remove "${kernel_pkgs[@]}" || :
 (cd /usr/lib/modules && rm -rf -- ./*)
 
+# fluna pins its own kernel: build_files/01-base.sh sets
+# `fedora.exclude`/`updates.exclude` to drop every kernel package from those
+# repos. That exclusion is what protects the ogc kernel in the shipped image,
+# but this throwaway live payload needs the Fedora kernel from those same
+# repos. Remove the repo option entirely (falls back to the repo file default)
+# instead of rewriting the list, so this cannot drift when fluna changes it.
+# The installed system is the untouched fluna image.
+dnf5 config-manager unsetopt fedora.exclude updates.exclude
+
 # Install the stock Fedora kernel (signed by the Fedora/MS chain shim trusts).
 dnf -y --repo fedora,updates --setopt=tsflags=noscripts install kernel kernel-core
 kernel="$(find /usr/lib/modules -maxdepth 1 -type d -printf '%P\n' | grep .)"

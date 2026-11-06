@@ -80,7 +80,7 @@ jobs:
             --security-opt label=disable \
             --squash \
             --build-arg BASE_IMAGE="${ref}" \
-            --build-arg INSTALL_IMAGE="${ref}" \
+            --build-arg INSTALL_IMAGE_PAYLOAD="${ref}" \
             -t "localhost/${IMAGE_NAME}-payload:${DEFAULT_TAG}" \
             installer/
 
