@@ -1,0 +1,81 @@
+# Anaconda installer environment consumed by `image-builder build bootc-generic-iso`.
+# The container that is actually installed (the payload) is passed as PAYLOAD_REF
+# and embedded into the ISO with --bootc-installer-payload-ref => fully offline install.
+#
+# Based on osbuild reference:
+# https://github.com/osbuild/image-builder/blob/main/doc/40-bootc-generic-iso.md
+ARG FEDORA_VERSION=44
+FROM quay.io/fedora/fedora-bootc:${FEDORA_VERSION}
+
+ARG PAYLOAD_REF
+
+RUN dnf5 install -qy \
+    anaconda \
+    anaconda-install-img-deps \
+    anaconda-dracut \
+    dracut-config-generic \
+    dracut-network \
+    net-tools \
+    grub2-efi-x64-cdboot \
+    plymouth \
+    default-fonts-core-sans \
+    default-fonts-other-sans \
+    google-noto-sans-cjk-fonts \
+    xorrisofs \
+    squashfs-tools \
+    jq && \
+    dnf5 clean all
+
+RUN mkdir -p /boot/efi && cp -ra /usr/lib/efi/*/*/EFI /boot/efi
+
+# ISO boot menu (LABEL here must match inst.stage2=hd:LABEL=...)
+RUN mkdir -p /usr/lib/image-builder/bootc
+COPY <<EOT /usr/lib/image-builder/bootc/iso.yaml
+label: "Fluna-Installer"
+grub2:
+  entries:
+    - name: "Install Fluna"
+      linux: "/images/pxeboot/vmlinuz inst.stage2=hd:LABEL=Fluna-Installer console=tty0 inst.graphical rhgb quiet"
+      initrd: "/images/pxeboot/initrd.img"
+EOT
+
+# What Anaconda installs: the payload from the ISO's embedded container storage
+RUN mkdir -p /usr/share/anaconda && \
+    echo "bootc --source-imgref containers-storage:${PAYLOAD_REF} --target-imgref ${PAYLOAD_REF}" \
+      > /usr/share/anaconda/interactive-defaults.ks
+
+# Minimum environment adjustments lorax normally does for Anaconda
+RUN echo "install:x:0:0:root:/root:/usr/libexec/anaconda/run-anaconda" >> /etc/passwd && \
+    echo "install::14438:0:99999:7:::" >> /etc/shadow && \
+    passwd -d root
+
+RUN (mv /usr/share/dnf5/repos.d /etc/anaconda.repos.d 2>/dev/null || mv /etc/yum.repos.d /etc/anaconda.repos.d) && \
+    rm -v /usr/lib/systemd/system-generators/systemd-gpt-auto-generator && \
+    ln -sf /lib/systemd/system/anaconda.target /etc/systemd/system/default.target && \
+    ln -sf /usr/lib/systemd/system/anaconda-shell@.service /usr/lib/systemd/system/autovt@.service
+
+RUN mv /usr/share/anaconda/list-harddrives-stub /usr/bin/list-harddrives
+
+RUN mkdir -p /usr/lib/systemd/logind.conf.d
+COPY <<EOT /usr/lib/systemd/logind.conf.d/anaconda-shell.conf
+[Login]
+ReserveVT=2
+EOT
+
+RUN mkdir -p "$(realpath /root)" && \
+    kernel=$(kernel-install list --json pretty | jq -r '.[] | select(.has_kernel == true) | .version') && \
+    DRACUT_NO_XATTR=1 dracut --force -v --zstd --reproducible --no-hostonly \
+        --add "anaconda" \
+        "/usr/lib/modules/${kernel}/initramfs.img" "${kernel}"
+
+RUN mkdir -p /etc/systemd/user/pipewire.service.d/
+COPY <<EOT /etc/systemd/user/pipewire.service.d/allowroot.conf
+[Unit]
+ConditionUser=
+EOT
+
+RUN mkdir -p /etc/systemd/user/pipewire.socket.d/
+COPY <<EOT /etc/systemd/user/pipewire.socket.d/allowroot.conf
+[Unit]
+ConditionUser=
+EOT
