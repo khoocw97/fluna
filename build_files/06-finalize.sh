@@ -23,7 +23,7 @@ fi
 [[ -e /usr/bin/pulseaudio ]] || ln -s /usr/bin/true /usr/bin/pulseaudio
 
 # -- Flathub repo file --
-# flatpak-preinstall.service reads this exact path.
+# The base image's flatpak-add-fedora-repos.service reads this exact path.
 mkdir -p /etc/flatpak/remotes.d
 curl -f --retry 3 --retry-all-errors \
     -Lo /etc/flatpak/remotes.d/flathub.flatpakrepo \

@@ -1,16 +1,20 @@
 [Unit]
-Description=Add Flathub flatpak repositories and install application
-ConditionPathExists=!/var/lib/flatpak/.ublue-initialized
-Before=flatpak-system-helper.service
+Description=Install preinstalled Flatpak applications
+# Base image's flatpak-add-fedora-repos.service adds Flathub on first boot.
+# Order after it (soft dependency: a skipped/failed repo unit must not stop the
+# install attempt) so the remote exists before flatpak preinstall resolves refs.
+After=flatpak-add-fedora-repos.service
+Wants=flatpak-add-fedora-repos.service
+StartLimitIntervalSec=0
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/bin/flatpak remote-add --system --if-not-exists flathub /etc/flatpak/remotes.d/flathub.flatpakrepo
-ExecStart=/usr/bin/flatpak remote-add --system --if-not-exists --disable --title "Fedora Flatpaks" fedora oci+https://registry.fedoraproject.org
-ExecStart=/usr/bin/flatpak remote-add --system --if-not-exists --disable --title "Fedora Flatpaks (testing)" fedora-testing oci+https://registry.fedoraproject.org#testing
-ExecStartPost=/usr/bin/touch /var/lib/flatpak/.ublue-initialized
 ExecStart=/usr/bin/flatpak preinstall --system -y --noninteractive
+# Offline/failed installs retry every 30s and again on every boot. On success
+# this is a no-op, so no "already ran" marker is needed (a marker would skip
+# refs added to preinstall.d later).
+Restart=on-failure
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
