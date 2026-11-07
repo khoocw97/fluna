@@ -54,10 +54,26 @@ systemctl enable livesys.service livesys-late.service
 dnf -qy versionlock clear
 dnf install -y --allowerasing \
     anaconda-live libblockdev-btrfs libblockdev-lvm dm mokutil
+
+# Anaconda defaults to a 6-character password policy, and the F44 Web UI
+# (anaconda-webui 68) hard-blocks Next until the length rule is met. Allow
+# 1-character root/user/LUKS passwords in the installer.
+sed -i -E '/^[[:space:]]*(root|user|luks) \(quality [0-9]+, length [0-9]+/ s/length [0-9]+/length 1/' \
+    /etc/anaconda/anaconda.conf
+[[ $(grep -cE '^[[:space:]]*(root|user|luks) \(quality [0-9]+, length 1' /etc/anaconda/anaconda.conf) -eq 3 ]] || {
+    echo >&2 "ERROR: could not lower the Anaconda password policy"
+    exit 1
+}
 mkdir -p /var/lib/rpm-state # Anaconda Web UI needs this
+# --leavebootorder: anaconda's ostree path runs
+# `bootupctl backend install --update-firmware`, whose efibootmgr call fails on
+# many firmwares and in VMs ("Cannot allocate memory" = NVRAM full) and aborts
+# the install with "failed to write boot loader configuration". This drops
+# --update-firmware; the %post below writes the EFI entry best-effort instead.
 cat >>/usr/share/anaconda/interactive-defaults.ks <<EOF
 
 ostreecontainer --url=${INSTALL_IMAGE_PAYLOAD} --transport=containers-storage --no-signature-verification
+bootloader --leavebootorder
 EOF
 
 # Secure Boot: queue Universal Blue's kernel-signing key for enrollment so the
@@ -75,6 +91,22 @@ cat >>/usr/share/anaconda/interactive-defaults.ks <<EOF
 if [ -d /sys/firmware/efi ] && [ -f ${SECUREBOOT_KEY} ]; then
     mokutil --timeout -1 || :
     printf 'universalblue\nuniversalblue\n' | mokutil --import ${SECUREBOOT_KEY} || :
+fi
+%end
+EOF
+
+# bootupd no longer touches NVRAM (see --leavebootorder above), so add the EFI
+# boot entry here. If efibootmgr fails, keep a removable-media boot path.
+cat >>/usr/share/anaconda/interactive-defaults.ks <<'EOF'
+
+%post --nochroot --log=/tmp/installer-efi.log
+if [ -d /sys/firmware/efi ] && [ -d /mnt/sysroot/boot/efi/EFI/fedora ]; then
+    root_src=$(findmnt -no SOURCE /mnt/sysroot)
+    disk=/dev/$(lsblk -no PKNAME "${root_src%%[*}")
+    esp=$(lsblk -no PARTN,FSTYPE "$disk" | awk '$2 == "vfat" { print $1; exit }')
+    efibootmgr -c -d "$disk" -p "$esp" -L fluna -l '\EFI\fedora\shimx64.efi' ||
+        cp -f /mnt/sysroot/boot/efi/EFI/fedora/grubx64.efi /mnt/sysroot/boot/efi/EFI/BOOT/ ||
+        :
 fi
 %end
 EOF
