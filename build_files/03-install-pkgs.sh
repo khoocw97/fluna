@@ -32,7 +32,7 @@ dnf5 install -y \
 
 # -- Input: fcitx5 (replaces ibus) --
 dnf5 install -y \
-    fcitx5 fcitx5-chinese-addons fcitx5-rime librime-lua librime-octagram \
+    fcitx5 fcitx5-rime librime-lua librime-octagram \
     fcitx5-gtk fcitx5-qt fcitx5-configtool
 
 # -- Virtualization --
