@@ -16,7 +16,7 @@ dnf5 install -y --setopt=install_weak_deps=False \
     langpacks-fonts-zh_CN langpacks-fonts-zh_TW
 
 # -- Window manager (umbriel from khoocw97/software) --
-dnf5 install -y umbriel noctalia
+dnf5 install -y umbriel noctalia-nightly
 
 # -- Personal packages --
 dnf5 install -y \
