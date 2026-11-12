@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-dnf install -y --setopt=tsflags=noscripts https://mega.nz/linux/repo/Fedora_44/x86_64/megacmd-Fedora_44.x86_64.rpm
+dnf install -y --setopt=tsflags=noscripts https://mega.nz/linux/repo/Fedora_45/x86_64/megacmd-Fedora_45.x86_64.rpm
