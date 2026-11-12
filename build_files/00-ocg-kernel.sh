@@ -2,8 +2,8 @@
 #
 # Kernel.
 #
-# The kernel RPMs come from the akmods image mounted at /tmp/kernel-rpms, which
-# is also where any future out-of-tree module would come from.
+# Kernel RPMs come from the akmods image mounted at /tmp/kernel-rpms; out-of-tree
+# modules (wl) come from the same image at /tmp/akmods-rpms.
 #
 set -xeuo pipefail
 
@@ -42,6 +42,10 @@ for pkg in kernel kernel-core kernel-modules kernel-modules-core kernel-modules-
         dnf5 versionlock add "${pkg}"
     fi
 done
+
+# -- Broadcom wl --
+# Installed but blacklisted by default; see system_files/etc/modprobe.d.
+dnf5 -y install /tmp/akmods-rpms/{common,kmods}/*wl*.rpm
 
 # -- Restore the kernel-install triggers --
 pushd /usr/lib/kernel/install.d
