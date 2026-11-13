@@ -27,7 +27,7 @@ dnf5 install -y \
 
 # -- CLI tools --
 dnf5 install -y \
-    ripgrep fd-find chezmoi zoxide eza fzf bat tealdeer fastfetch duf \
+    ripgrep fd-find chezmoi zoxide eza fzf bat fastfetch duf \
     btop brightnessctl playerctl
 
 # -- Input: fcitx5 (replaces ibus) --
