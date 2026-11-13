@@ -21,7 +21,7 @@ dnf5 install -y umbriel noctalia-nightly
 # -- Personal packages --
 dnf5 install -y \
     starship sddm qt6-qtdeclarative sddm-themes \
-    gnome-keyring-pam adw-gtk3-theme xdg-user-dirs power-profiles-daemon \
+    oo7-daemon oo7-portal pam_oo7 adw-gtk3-theme xdg-user-dirs power-profiles-daemon \
     fuzzel bibata-cursor-themes meld helium-bin sunshine kitty yazi nemo \
     kdeconnectd kf6-qqc2-desktop-style udiskie swayimg vm-curator
 
