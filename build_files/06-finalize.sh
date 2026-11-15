@@ -63,7 +63,7 @@ systemctl enable flatpak-preinstall.service
 systemctl enable sddm hide-grub.service
 systemctl enable bluetooth
 systemctl enable dmemcg-booster-system.service
-systemctl --global enable mega-cmd-server.service steam-wrapper.service dmemcg-booster-user.service
+systemctl --global enable mega-cmd-server.service steam-wrapper.service dmemcg-booster-user.service oo7-daemon.service
 
 # -- Disable COPRs so they don't end up enabled on the final image --
 for copr in lizardbyte/stable lihaohong/yazi imput/helium atim/starship khoocw97/software; do
