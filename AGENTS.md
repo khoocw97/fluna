@@ -61,6 +61,13 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
 - The greeter gets DRM/seat access through `pam_systemd`, already present in
   Fedora's `greetd-greeter` PAM service; no `video`/`input` group changes.
 - SDDM + `simple-sddm` stay installed as a fallback and are **not** enabled.
+  Fedora's `85-display-manager.preset` (redhat-systemd-presets-common) enables
+  every installed DM ("the one installed first wins"), so installing `sddm`
+  creates `display-manager.service -> sddm.service`; `06-finalize` must
+  `systemctl disable sddm` before `systemctl enable greetd`. `greetd` is not in
+  that preset, hence the explicit enable. If sddm is removed entirely, drop the
+  `disable sddm` line too (it fails once the unit is gone); with several DMs
+  installed, use `systemctl enable --force greetd` to take over the alias.
   Switch back with `systemctl enable sddm && systemctl disable greetd`.
 - Do not reintroduce `sddm.service.d/10-plymouth.conf`
   (`Conflicts=plymouth-quit` + `sleep 3` + `plymouth quit --retain-splash`):

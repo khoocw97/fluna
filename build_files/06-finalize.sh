@@ -82,8 +82,11 @@ jq -e --arg repo ghcr.io/khoocw97/fluna \
 # -- Services --
 systemctl enable podman.socket
 systemctl enable flatpak-preinstall.service
-# greetd + Noctalia Greeter is the login manager. SDDM stays installed as a
-# fallback: `systemctl enable sddm && systemctl disable greetd` switches back.
+# greetd + Noctalia Greeter is the login manager. Installing sddm already
+# enabled it via Fedora's 85-display-manager.preset, so free the
+# display-manager.service alias first. SDDM stays installed as a fallback:
+# `systemctl enable sddm && systemctl disable greetd`.
+systemctl disable sddm
 systemctl enable greetd hide-grub.service
 systemctl enable bluetooth
 systemctl enable dmemcg-booster-system.service
