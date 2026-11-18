@@ -41,6 +41,21 @@ sudo bootc switch ghcr.io/khoocw97/fluna:latest
 
 Reboot to apply.
 
+`bootc` does not verify image signatures by default, and the switching system
+needs fluna's cosign key before it can check anything. The image ships its own
+`/etc/containers/policy.json` entry and key, so after the first boot — switched
+or installed from the ISO — run it once:
+
+```bash
+ujust verify-image
+```
+
+That re-switches the booted image with `--enforce-container-sigpolicy` (needs
+network for the signature; raw equivalent: `sudo bootc switch
+--enforce-container-sigpolicy ghcr.io/khoocw97/fluna:latest`). It records the
+deployment as `ostree-image-signed:docker://...`, so later `bootc upgrade`s keep
+verifying against the same policy.
+
 ### Secure Boot
 
 The fluna kernel is signed with Universal Blue's akmods key, not Fedora's. The installer

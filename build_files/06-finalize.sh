@@ -57,6 +57,28 @@ ln -sf /etc/sddm/themes/simple-sddm/theme.conf /usr/share/sddm/themes/simple-sdd
 
 systemctl set-default graphical.target
 
+# -- Container image signature policy --
+# bootc only verifies an image when containers-policy.json has an entry for it
+# AND the deployment was switched with --enforce-container-sigpolicy. The base
+# already ships a policy with `reject` as default and an accept-anything
+# catch-all, so only fluna's own entry is added.
+install -Dm644 /ctx/cosign.pub /etc/pki/containers/fluna.pub
+policy=/etc/containers/policy.json
+if [[ ! -f ${policy} ]]; then
+    echo '{"default":[{"type":"reject"}],"transports":{"docker":{}}}' > "${policy}"
+fi
+jq --arg repo ghcr.io/khoocw97/fluna '
+    .transports.docker = {($repo): [{
+        "type": "sigstoreSigned",
+        "keyPath": "/etc/pki/containers/fluna.pub",
+        "signedIdentity": {"type": "matchRepository"}
+    }]} + .transports.docker
+' "${policy}" > "${policy}.new"
+install -m644 "${policy}.new" "${policy}"
+rm -f "${policy}.new"
+jq -e --arg repo ghcr.io/khoocw97/fluna \
+    '.transports.docker[$repo][0].type == "sigstoreSigned"' "${policy}" > /dev/null
+
 # -- Services --
 systemctl enable podman.socket
 systemctl enable flatpak-preinstall.service

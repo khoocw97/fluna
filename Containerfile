@@ -9,6 +9,7 @@ FROM scratch AS ctx
 COPY build_files /
 COPY system_files /system_files
 COPY ujust /ujust
+COPY cosign.pub /cosign.pub
 
 # Cached kernel RPMs (/kernel-rpms), mounted into the build stage below
 FROM ghcr.io/ublue-os/akmods:${KERNEL_FLAVOR}-${FEDORA_VERSION} AS akmods
