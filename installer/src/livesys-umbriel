@@ -5,11 +5,12 @@
 # The umbriel package ships /usr/share/wayland-sessions/umbriel.desktop
 # (Exec=/usr/bin/start-umbriel); livesys-scripts just has no session script.
 
-mkdir -p /etc/sddm.conf.d
-cat > /etc/sddm.conf.d/10-live-autologin.conf <<'EOF'
-[Autologin]
-User=liveuser
-Session=umbriel.desktop
+mkdir -p /etc/greetd
+cat >> /etc/greetd/config.toml <<'EOF'
+
+[initial_session]
+command = "/usr/bin/start-umbriel"
+user = "liveuser"
 EOF
 
 # Installer: show it in menus and autostart it with the session

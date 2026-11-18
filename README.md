@@ -11,7 +11,8 @@ Published at: `ghcr.io/khoocw97/fluna:latest`
 - **Kernel** — [Open Gaming Collective kernel](https://github.com/OpenGamingCollective/kernel-packages-fedora)
   from `ghcr.io/ublue-os/akmods:ogc-45`.
 - **Compositor/Shell** — [Umbriel](https://github.com/noctalia-dev/umbriel) and [Noctalia](https://github.com/noctalia-dev/noctalia)
-- **Login** — SDDM with the `simple-sddm` theme
+- **Login** — [Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) on `greetd`.
+  SDDM + `simple-sddm` stay installed as a fallback (`systemctl enable sddm && systemctl disable greetd`).
 - **Input** — `fcitx5` + `fcitx5-rime`, replacing ibus. `rime-ice` is built into
   `/usr/share/rime-ice` at image build time; `ujust setup-rime` installs it into
   `~/.local/share/fcitx5/rime` (full pinyin or double pinyin). US layout is the default,

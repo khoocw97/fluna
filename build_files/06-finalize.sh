@@ -82,7 +82,9 @@ jq -e --arg repo ghcr.io/khoocw97/fluna \
 # -- Services --
 systemctl enable podman.socket
 systemctl enable flatpak-preinstall.service
-systemctl enable sddm hide-grub.service
+# greetd + Noctalia Greeter is the login manager. SDDM stays installed as a
+# fallback: `systemctl enable sddm && systemctl disable greetd` switches back.
+systemctl enable greetd hide-grub.service
 systemctl enable bluetooth
 systemctl enable dmemcg-booster-system.service
 systemctl --global enable mega-cmd-server.service steam-wrapper.service dmemcg-booster-user.service oo7-daemon.service

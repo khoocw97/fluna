@@ -15,8 +15,8 @@ dnf5 install -y --setopt=install_weak_deps=False \
     google-noto-sans-cjk-vf-fonts fira-code-fonts glibc-all-langpacks \
     langpacks-fonts-zh_CN langpacks-fonts-zh_TW
 
-# -- Window manager (from khoocw97/software) --
-dnf5 install -y umbriel noctalia-git \
+# -- Window manager / login screen (from khoocw97/software) --
+dnf5 install -y umbriel noctalia-git noctalia-greeter-git \
     luciole # file manager
 
 # -- Personal packages --
