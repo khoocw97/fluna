@@ -39,9 +39,10 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   `tmpfiles.d` in `system_files/usr/lib/tmpfiles.d/`, never with `mkdir` in the
   build.
 - Kernel args: `system_files/usr/lib/bootc/kargs.d/*.toml`. `10-plymouth.toml`
-  ships the active `rhgb quiet`; `11-plymouth-sddm.toml` documents (commented
-  out) the `vt.*`/`fbcon` args SDDM may need for a clean Plymouth hand-off.
-  Leave them disabled while greetd is the display manager.
+  ships the active `rhgb quiet` and, in a comment, the `vt.*`/`fbcon` args
+  SDDM may need for a clean Plymouth hand-off. Leave them disabled while
+  greetd is the display manager. Every `*.toml` there must contain a `kargs`
+  field — lint rejects even a fully commented-out file.
 - Units: `system_files/usr/lib/systemd/system/` (e.g. `hide-grub.service`),
   enabled with `systemctl enable` in `06-finalize.sh`.
 
