@@ -52,9 +52,6 @@ for f in /usr/share/ublue-os/just/6[01]-fluna-*.just; do
 done
 
 # -- System configuration --
-# sddm theme config lives in /etc so users can edit it.
-ln -sf /etc/sddm/themes/simple-sddm/theme.conf /usr/share/sddm/themes/simple-sddm/theme.conf
-
 systemctl set-default graphical.target
 
 # -- Container image signature policy --
@@ -82,11 +79,7 @@ jq -e --arg repo ghcr.io/khoocw97/fluna \
 # -- Services --
 systemctl enable podman.socket
 systemctl enable flatpak-preinstall.service
-# greetd + Noctalia Greeter is the login manager. Installing sddm already
-# enabled it via Fedora's 85-display-manager.preset, so free the
-# display-manager.service alias first. SDDM stays installed as a fallback:
-# `systemctl enable sddm && systemctl disable greetd`.
-systemctl disable sddm
+# greetd + Noctalia Greeter is the login manager.
 systemctl enable greetd hide-grub.service
 systemctl enable bluetooth
 systemctl enable dmemcg-booster-system.service

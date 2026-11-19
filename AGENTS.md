@@ -30,19 +30,16 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   Check a package's flags with
   `rpm -qp --qf '[%{fileflags:fflags} %{filenames}\n]' foo.rpm` (`cn` = noreplace).
 - Regular (non-`%config`) files owned by an RPM **are** replaced by the package.
-  Example: the `sddm-themes` RPM owns `/usr/share/sddm/themes/simple-sddm/*`, so
-  the repo keeps the editable `theme.conf` under `/etc` and symlinks it in
-  `06-finalize.sh`. Use a finalize step only for this case, with a comment.
+  If a packaged file must stay user-editable, keep our copy under `/etc` and
+  symlink it into the packaged path in `06-finalize.sh`, with a comment.
 - Never write `/usr/etc`; `bootc container lint` rejects it.
 - `/var` in the image is like `VOLUME /var`: content is unpacked only on first
   install, later image changes are ignored. Create runtime state dirs with
   `tmpfiles.d` in `system_files/usr/lib/tmpfiles.d/`, never with `mkdir` in the
   build.
 - Kernel args: `system_files/usr/lib/bootc/kargs.d/*.toml`. `10-plymouth.toml`
-  ships the active `rhgb quiet` and, in a comment, the `vt.*`/`fbcon` args
-  SDDM may need for a clean Plymouth hand-off. Leave them disabled while
-  greetd is the display manager. Every `*.toml` there must contain a `kargs`
-  field — lint rejects even a fully commented-out file.
+  ships `rhgb quiet`. Every `*.toml` there must contain a `kargs` field — lint
+  rejects even a fully commented-out file.
 - Units: `system_files/usr/lib/systemd/system/` (e.g. `hide-grub.service`),
   enabled with `systemctl enable` in `06-finalize.sh`.
 
@@ -61,20 +58,17 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   upstream's rule hardcodes `greeter:greeter`.
 - The greeter gets DRM/seat access through `pam_systemd`, already present in
   Fedora's `greetd-greeter` PAM service; no `video`/`input` group changes.
-- SDDM + `simple-sddm` stay installed as a fallback and are **not** enabled.
-  Fedora's `85-display-manager.preset` (redhat-systemd-presets-common) enables
-  every installed DM ("the one installed first wins"), so installing `sddm`
-  creates `display-manager.service -> sddm.service`; `06-finalize` must
-  `systemctl disable sddm` before `systemctl enable greetd`. `greetd` is not in
-  that preset, hence the explicit enable. If sddm is removed entirely, drop the
-  `disable sddm` line too (it fails once the unit is gone); with several DMs
-  installed, use `systemctl enable --force greetd` to take over the alias.
-  Switch back with `systemctl enable sddm && systemctl disable greetd`.
-- Do not reintroduce `sddm.service.d/10-plymouth.conf`
-  (`Conflicts=plymouth-quit` + `sleep 3` + `plymouth quit --retain-splash`):
-  it quits Plymouth after Weston already owns DRM master, which blanked the
-  machine. SDDM has no Plymouth handoff at all; GDM is the only DM with one
-  built in (ArchWiki Plymouth: "GDM supports smooth transition out of the box").
+- No other display manager is installed. Fedora's `85-display-manager.preset`
+  (redhat-systemd-presets-common) enables every installed DM ("the one installed
+  first wins"), so installing any DM (gdm, sddm, plasmalogin, ...) grabs
+  `display-manager.service` and it must be `systemctl disable`d before
+  `systemctl enable greetd`. `greetd` is not in that preset, hence the explicit
+  enable; with several DMs present, `systemctl enable --force greetd`.
+- Never hand Plymouth off from a display-manager unit (`Conflicts=plymouth-quit`
+  + `sleep` + `plymouth quit --retain-splash`): by then the DM's compositor
+  already owns DRM master and the machine blanks. GDM is the only DM with a
+  working hand-off built in; greetd instead starts
+  `After=plymouth-quit-wait.service`, which is why it needs nothing.
 - Live ISO autologin lives in `installer/src/livesys-umbriel` via greetd's
   `[initial_session]`.
 

@@ -1,9 +1,2 @@
 # Graphical boot: hide the text boot log and let plymouth own the screen.
 kargs = ["rhgb", "quiet"]
-
-# SDDM instead of greetd: weston needs ~0.5s before its first modeset and
-# Plymouth's quit only drops DRM master without clearing the screen, so the
-# last splash frame (or the VT cursor) can stay visible into the greeter.
-# greetd does not need this: it starts after plymouth-quit-wait.service.
-# Switch with `systemctl enable sddm && systemctl disable greetd`, then use:
-# kargs = ["rhgb", "quiet", "vt.global_cursor_default=0", "fbcon=nodefer"]
