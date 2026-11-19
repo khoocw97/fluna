@@ -30,9 +30,14 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   Check a package's flags with
   `rpm -qp --qf '[%{fileflags:fflags} %{filenames}\n]' foo.rpm` (`cn` = noreplace).
 - Regular (non-`%config`) files owned by an RPM **are** replaced by the package.
-  If a packaged file must stay user-editable, keep our copy under `/etc` and
-  symlink it into the packaged path in `06-finalize.sh`, with a comment.
+  There is no `/etc` override for such paths: patch the installed file in
+  `06-finalize.sh` after the package step, with a comment and a `grep -qx`
+  check that the patch applied. Live example: `Exec=` in
+  `/usr/share/wayland-sessions/umbriel.desktop` (owned by `umbriel`).
 - Never write `/usr/etc`; `bootc container lint` rejects it.
+- Never write `/usr/local/*` either: on Fedora it is a symlink to
+  `/var/usrlocal`, and image `/var` content is only applied on first install
+  (see next bullet). Ship image binaries in `/usr/bin` instead.
 - `/var` in the image is like `VOLUME /var`: content is unpacked only on first
   install, later image changes are ignored. Create runtime state dirs with
   `tmpfiles.d` in `system_files/usr/lib/tmpfiles.d/`, never with `mkdir` in the
@@ -69,8 +74,20 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   already owns DRM master and the machine blanks. GDM is the only DM with a
   working hand-off built in; greetd instead starts
   `After=plymouth-quit-wait.service`, which is why it needs nothing.
+- Session start cannot be seamless: greetd sets the VT back to text mode
+  (`kd_setmode(KdMode::Text)`) and writes a clear to it before exec'ing the
+  session, and on Fedora's kernel
+  (`CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y`) any write to the VT makes
+  fbcon take over and modeset every output. Anything the session prints then
+  lands on the console, so the hand-off showed a terminal instead of a clean
+  switch. `06-finalize` rewrites `Exec=` in
+  `/usr/share/wayland-sessions/umbriel.desktop` to
+  `system_files/usr/bin/umbriel-session`, which clears the VT
+  (`ESC[2J ESC[H ESC[3J ESC[?25l`) and runs `start-umbriel` under
+  `systemd-cat -t umbriel-session` so its stdio goes to the journal, never to
+  the VT. Same approach as dux-greeter#46 / dux-shell `5b41d69`.
 - Live ISO autologin lives in `installer/src/livesys-umbriel` via greetd's
-  `[initial_session]`.
+  `[initial_session]` (also through `umbriel-session`).
 
 ## Checks
 
