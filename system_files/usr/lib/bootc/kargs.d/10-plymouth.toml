@@ -1,2 +1,8 @@
 # Graphical boot: hide the text boot log and let plymouth own the screen.
-kargs = ["rhgb", "quiet"]
+# fbcon=nodefer: bind fbcon at boot instead of deferring it to the first VT
+# write. Plymouth's DRM renderer leaves fbcon unbound, and without the deferred
+# takeover nothing rebinds it when greetd switches the VT back to text on login
+# (`kd_setmode(KdMode::Text)` + `term_clear()` in session/worker.rs) — that
+# rebind is the terminal flash and the extra full modeset between the greeter
+# and the compositor.
+kargs = ["rhgb", "quiet", "fbcon=nodefer"]

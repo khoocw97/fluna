@@ -43,8 +43,8 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   `tmpfiles.d` in `system_files/usr/lib/tmpfiles.d/`, never with `mkdir` in the
   build.
 - Kernel args: `system_files/usr/lib/bootc/kargs.d/*.toml`. `10-plymouth.toml`
-  ships `rhgb quiet`. Every `*.toml` there must contain a `kargs` field — lint
-  rejects even a fully commented-out file.
+  ships `rhgb quiet fbcon=nodefer`. Every `*.toml` there must contain a `kargs`
+  field — lint rejects even a fully commented-out file.
 - Units: `system_files/usr/lib/systemd/system/` (e.g. `hide-grub.service`),
   enabled with `systemctl enable` in `06-finalize.sh`.
 
@@ -74,20 +74,19 @@ filesystem rules follow [bootc](https://bootc.dev/bootc/).
   already owns DRM master and the machine blanks. GDM is the only DM with a
   working hand-off built in; greetd instead starts
   `After=plymouth-quit-wait.service`, which is why it needs nothing.
-- Session start cannot be seamless: greetd sets the VT back to text mode
-  (`kd_setmode(KdMode::Text)`) and writes a clear to it before exec'ing the
-  session, and on Fedora's kernel
-  (`CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y`) any write to the VT makes
-  fbcon take over and modeset every output. Anything the session prints then
-  lands on the console, so the hand-off showed a terminal instead of a clean
-  switch. `06-finalize` rewrites `Exec=` in
-  `/usr/share/wayland-sessions/umbriel.desktop` to
-  `system_files/usr/bin/umbriel-session`, which clears the VT
-  (`ESC[2J ESC[H ESC[3J ESC[?25l`) and runs `start-umbriel` under
-  `systemd-cat -t umbriel-session` so its stdio goes to the journal, never to
-  the VT. Same approach as dux-greeter#46 / dux-shell `5b41d69`.
+- Session start is not seamless under greetd: it sets the VT back to text mode
+  (`kd_setmode(KdMode::Text)`) and clears it before exec'ing the session. On
+  Fedora's kernel (`CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER=y`) that write
+  makes fbcon take over again and modeset every output, which showed the text
+  console between the greeter and the compositor.
+  `10-plymouth.toml` ships `fbcon=nodefer`, so fbcon binds once at boot,
+  Plymouth's DRM renderer unregisters it, and nothing rebinds it on login. Do
+  not add `vt.global_cursor_default=0`: it hides the cursor on the text VTs too.
+  If a terminal flash ever comes back, the fallback is dux-greeter#46's
+  approach: wrap the session `Exec=` in a script that clears the VT and runs
+  `start-umbriel` under `systemd-cat` (journal instead of the VT).
 - Live ISO autologin lives in `installer/src/livesys-umbriel` via greetd's
-  `[initial_session]` (also through `umbriel-session`).
+  `[initial_session]`.
 
 ## Checks
 

@@ -52,14 +52,6 @@ for f in /usr/share/ublue-os/just/6[01]-fluna-*.just; do
 done
 
 # -- System configuration --
-# umbriel owns /usr/share/wayland-sessions/umbriel.desktop as a regular (non
-# %config) file, so system_files cannot carry it: the package install replaces
-# it. Rewrite Exec= after the install so the session runs through
-# umbriel-session, which keeps the login VT quiet.
-session_desktop=/usr/share/wayland-sessions/umbriel.desktop
-sed -i 's|^Exec=/usr/bin/start-umbriel$|Exec=/usr/bin/umbriel-session|' "${session_desktop}"
-grep -qx 'Exec=/usr/bin/umbriel-session' "${session_desktop}"
-
 systemctl set-default graphical.target
 
 # -- Container image signature policy --
