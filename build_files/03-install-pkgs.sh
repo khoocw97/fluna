@@ -25,11 +25,11 @@ dnf5 install -y \
     starship qt6-qtdeclarative \
     oo7-daemon oo7-portal pam_oo7 adw-gtk3-theme xdg-user-dirs power-profiles-daemon \
     fuzzel bibata-cursor-themes meld helium-bin sunshine kitty yazi \
-    kdeconnectd kf6-qqc2-desktop-style udiskie swayimg vm-curator
+    kdeconnectd kf6-qqc2-desktop-style udiskie swayimg
 
 # -- CLI tools --
 dnf5 install -y \
-    ripgrep fd-find chezmoi zoxide eza fzf bat fastfetch duf \
+    ripgrep fd-find chezmoi zoxide eza fzf bat fastfetch duf gum \
     btop brightnessctl playerctl
 
 # -- Input: fcitx5 (replaces ibus) --
