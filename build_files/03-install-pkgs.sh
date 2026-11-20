@@ -13,7 +13,8 @@ dnf5 install -y --setopt=install_weak_deps=False \
     default-fonts-core-emoji default-fonts default-fonts-cjk-sans \
     google-noto-color-emoji-fonts google-noto-emoji-fonts \
     google-noto-sans-cjk-vf-fonts fira-code-fonts glibc-all-langpacks \
-    langpacks-fonts-zh_CN langpacks-fonts-zh_TW
+    langpacks-fonts-zh_CN langpacks-fonts-zh_TW \
+    lxgw-fonts maple-mono-fonts # from khoocw97/software
 
 # -- Window manager / login screen (from khoocw97/software) --
 dnf5 install -y umbriel noctalia-git noctalia-greeter-git \
@@ -37,7 +38,7 @@ dnf5 install -y \
     fcitx5-gtk fcitx5-qt fcitx5-configtool
 
 # -- Virtualization --
-dnf5 install -y libvirt qemu-kvm swtpm swtpm-tools edk2-ovmf dnsmasq
+dnf5 install -y libvirt qemu-kvm swtpm swtpm-tools edk2-ovmf dnsmasq vm-curator
 
 # -- Editor + AI coding agent (Terra) --
 dnf5 install -y zed opencode
