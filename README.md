@@ -12,9 +12,9 @@ Published at: `ghcr.io/khoocw97/fluna:latest`
   from `ghcr.io/ublue-os/akmods:ogc-45`.
 - **Compositor/Shell** — [Umbriel](https://github.com/noctalia-dev/umbriel) and [Noctalia](https://github.com/noctalia-dev/noctalia)
 - **Login** — [Noctalia Greeter](https://github.com/noctalia-dev/noctalia-greeter) on `greetd`.
-- **Input** — `fcitx5` + `fcitx5-rime`, replacing ibus. `rime-ice` is built into
-  `/usr/share/rime-ice` at image build time; `ujust setup-rime` installs it into
-  `~/.local/share/fcitx5/rime` (full pinyin or double pinyin). US layout is the default,
+- **Input** — `fcitx5` + `fcitx5-rime`, replacing ibus. `ujust setup-rime`
+  installs `rime-ice` into `~/.local/share/fcitx5/rime` from Git (full pinyin or
+  double pinyin), so the image ships no copy. US layout is the default,
   Rime is the default input method.
 - **Apps** — kitty, nemo, Helium, Zed, OpenCode, yazi, fuzzel, starship, fastfetch, btop,
   meld, swayimg, Sunshine, KDE Connect, MEGAcmd, Bibata cursors, adw-gtk3 and Papirus icons.

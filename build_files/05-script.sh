@@ -12,7 +12,6 @@ trap 'echo "::endgroup::"' EXIT
 /ctx/scripts/install-megacmd
 /ctx/scripts/install-fonts
 /ctx/scripts/install-papirus
-/ctx/scripts/setup-rime-build
 /ctx/scripts/setup-firewall
 /ctx/scripts/install-sdl-gamecontroller
 /ctx/scripts/setup-plymouth-theme

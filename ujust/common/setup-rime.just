@@ -32,10 +32,15 @@ setup-rime ACTION="":
     }
 
     install_rime() {
-        echo "安装 Rime 配置（全拼，从本地内置数据）..."
+        echo "安装 Rime 配置（全拼，从 Git 拉取）..."
         mkdir -p "$RIME_DIR"
-        cp -r /usr/share/rime-ice/* "$RIME_DIR"
-        echo "已安装本地内置数据"
+        clone_plum || return 1
+        cd "$TMP_DIR/plum"
+        rime_dir="$RIME_DIR" bash rime-install iDvel/rime-ice
+        rime_dir="$RIME_DIR" bash rime-install "iDvel/rime-ice:others/recipes/grammar:schema=rime_ice"
+        rime_dir="$RIME_DIR" bash rime-install "iDvel/rime-ice:others/recipes/reverse_tone:schema=rime_ice"
+        rm -rf "$TMP_DIR"
+        echo "已安装全拼配置"
         restart_fcitx5
     }
 
@@ -97,7 +102,7 @@ setup-rime ACTION="":
         echo "Usage: ujust setup-rime <option>"
         echo "  <option>: Specify the quick option to skip the prompt"
         echo "  Use 'status' to print current status token"
-        echo "  Use 'install' to install built-in full pinyin data"
+        echo "  Use 'install' to install full pinyin data via git"
         echo "  Use 'install-shuangpin' to install a double pinyin scheme via git"
         echo "  Use 'update'  to update from Git repository"
         exit 0
