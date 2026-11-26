@@ -25,7 +25,8 @@ dnf5 install -y \
     starship qt6-qtdeclarative \
     oo7-daemon oo7-portal pam_oo7 adw-gtk3-theme xdg-user-dirs power-profiles-daemon \
     fuzzel bibata-cursor-themes meld helium-bin sunshine kitty yazi \
-    kdeconnectd kf6-qqc2-desktop-style udiskie swayimg
+    kdeconnectd kf6-qqc2-desktop-style udiskie swayimg \
+    xdg-desktop-portal-gtk
 
 # -- CLI tools --
 dnf5 install -y \
